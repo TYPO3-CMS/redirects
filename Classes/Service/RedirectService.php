@@ -333,15 +333,18 @@ class RedirectService implements LoggerAwareInterface
             $site->getDefaultLanguage(),
             new PageArguments((int)$pageId, '0', [])
         );
+
+        if (!$GLOBALS['TSFE'] instanceof TypoScriptFrontendController) {
+            $GLOBALS['TSFE'] = $controller;
+        }
+
         $controller->fe_user = $frontendUserAuthentication;
         $controller->fetch_the_id();
         $controller->calculateLinkVars($queryParams);
         $controller->getConfigArray();
         $controller->settingLanguage();
         $controller->newCObj();
-        if (!$GLOBALS['TSFE'] instanceof TypoScriptFrontendController) {
-            $GLOBALS['TSFE'] = $controller;
-        }
+
         if (!$GLOBALS['TSFE']->sys_page instanceof PageRepository) {
             $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance(PageRepository::class);
         }
