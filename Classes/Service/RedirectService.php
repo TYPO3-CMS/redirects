@@ -435,7 +435,7 @@ readonly class RedirectService
         } else {
             $locale = $language->getLocale();
         }
-        $pageRenderer->setLanguage($locale);
+        $pageRenderer->setLanguage($locale, $originalRequest);
         $expressionMatcherVariables = $this->getExpressionMatcherVariables($site, $originalRequest);
         $frontendTypoScript = $this->frontendTypoScriptFactory->createSettingsAndSetupConditions(
             $site,
