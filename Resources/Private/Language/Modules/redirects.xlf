@@ -7,7 +7,7 @@
         <source>Redirect Administration</source>
       </trans-unit>
       <trans-unit id="description">
-        <source>This is the administration area for Web Redirects.</source>
+        <source>Manage URL redirects to prevent broken links and route traffic to preferred destinations.</source>
       </trans-unit>
       <trans-unit id="title">
         <source>Redirects</source>
