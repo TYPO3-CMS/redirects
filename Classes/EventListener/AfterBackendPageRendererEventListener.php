@@ -34,6 +34,5 @@ final readonly class AfterBackendPageRendererEventListener
     public function __invoke(AfterBackendPageRenderEvent $event): void
     {
         $this->pageRenderer->loadJavaScriptModule('@typo3/redirects/event-handler.js');
-        $this->pageRenderer->addInlineLanguageLabelFile('EXT:redirects/Resources/Private/Language/locallang_slug_service.xlf');
     }
 }
