@@ -56,7 +56,7 @@ readonly class RecordHistoryRollbackController
         foreach ($correlationIds as $correlationId) {
             $type = $correlationId->getAspects()[1] ?? null;
             if ($type !== null) {
-                $revertedCorrelationTypes[] = $correlationId->getAspects()[1] ?? null;
+                $revertedCorrelationTypes[] = $type;
             }
             $this->rollBackCorrelation($correlationId);
         }
