@@ -126,6 +126,9 @@
       <trans-unit id="sys_redirect.integrity_status.self_reference">
         <source>Self reference</source>
       </trans-unit>
+      <trans-unit id="sys_redirect.integrity_status.invalid_target">
+        <source>Invalid target</source>
+      </trans-unit>
       <trans-unit id="sys_redirect.uid">
         <source>UID</source>
       </trans-unit>

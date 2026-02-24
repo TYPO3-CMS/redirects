@@ -24,4 +24,5 @@ class RedirectConflict
 {
     public const NO_CONFLICT = 'no_conflict';
     public const SELF_REFERENCE = 'self_reference';
+    public const INVALID_TARGET = 'invalid_target';
 }

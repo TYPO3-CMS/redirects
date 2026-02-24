@@ -27,6 +27,7 @@ use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Redirects\Service\IntegrityService;
+use TYPO3\CMS\Redirects\Utility\RedirectConflict;
 
 #[AsCommand('redirects:checkintegrity', 'Check integrity of redirects')]
 class CheckIntegrityCommand extends Command
@@ -102,6 +103,24 @@ class CheckIntegrityCommand extends Command
                 ),
             ];
             $list[] = $conflict;
+            $this->integrityService->setIntegrityStatus($conflict['redirect']);
+        }
+
+        foreach ($this->integrityService->checkRedirectIntegrity() as $conflict) {
+            if ($conflict['redirect']['integrity_status'] !== RedirectConflict::NO_CONFLICT) {
+                // Report only redirects with conflict status checked as conflicting redirects.
+                $conflictingRedirects[] = [
+                    $conflict['redirect']['uid'],
+                    $conflict['redirect']['source_host'],
+                    $conflict['redirect']['source_path'],
+                    $conflict['uri'],
+                    LocalizationUtility::translate(
+                        self::LANGUAGE_FILE_PATH . $integrityStatusLabel . $conflict['redirect']['integrity_status']
+                    ) ?? $conflict['redirect']['integrity_status'],
+                ];
+                $list[] = $conflict;
+            }
+            // Always update redirect status
             $this->integrityService->setIntegrityStatus($conflict['redirect']);
         }
 

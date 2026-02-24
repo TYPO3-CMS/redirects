@@ -20,12 +20,15 @@ namespace TYPO3\CMS\Redirects\Service;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Redirects\Event\AfterPageUrlsForSiteForRedirectIntegrityHaveBeenCollectedEvent;
+use TYPO3\CMS\Redirects\Event\RedirectIntegrityCheckEvent;
 use TYPO3\CMS\Redirects\Utility\RedirectConflict;
 
 /**
@@ -66,6 +69,39 @@ readonly class IntegrityService
                         ],
                     ];
                 }
+            }
+        }
+    }
+
+    /**
+     * Checks all redirects  by dispatching a PSR-14 event for each record,
+     * allowing listeners to validate targets and flag broken redirects.
+     */
+    public function checkRedirectIntegrity(): \Generator
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_redirect');
+        $queryBuilder->getRestrictions()->removeAll()
+            ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+        $result = $queryBuilder
+            ->select('*')
+            ->from('sys_redirect')
+            ->executeQuery();
+        while ($row = $result->fetchAssociative()) {
+            $event = $this->eventDispatcher->dispatch(
+                new RedirectIntegrityCheckEvent($row)
+            );
+            if ($event->getIntegrityStatus() !== null
+                && $event->getIntegrityStatus() !== RedirectConflict::NO_CONFLICT
+            ) {
+                yield [
+                    'uri' => $row['target'] ?? '',
+                    'redirect' => [
+                        'integrity_status' => $event->getIntegrityStatus(),
+                        'source_host' => $row['source_host'],
+                        'source_path' => $row['source_path'],
+                        'uid' => $row['uid'],
+                    ],
+                ];
             }
         }
     }

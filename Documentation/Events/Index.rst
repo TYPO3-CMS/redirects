@@ -51,6 +51,13 @@ Modify or enrich view data for the
 :php:`\TYPO3\CMS\Redirects\Controller\ManagementController`.
 :ref:`More details <t3coreapi:ModifyRedirectManagementControllerViewDataEvent>`
 
+..  _RedirectTargetIntegrityCheckEvent:
+
+RedirectTargetIntegrityCheckEvent
+=================================
+
+Validate redirect targets during the integrity check and flag broken redirects.
+
 ..  _RedirectWasHitEvent:
 
 RedirectWasHitEvent
