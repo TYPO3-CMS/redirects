@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace TYPO3\CMS\Redirects\Form\Element;
 
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
@@ -87,7 +88,9 @@ class ShortUrlElement extends AbstractFormElement
         $sourceHost = $row['source_host'] ?? '';
         $sourcePath = $row['source_path'] ?? '';
 
-        $scheme = GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https' : 'http';
+        /** @var NormalizedParams $normalizedParams */
+        $normalizedParams = $this->data['request']->getAttribute('normalizedParams');
+        $scheme = $normalizedParams->isHttps() ? 'https' : 'http';
         $completeUrl = $scheme . '://' . $sourceHost . $sourcePath;
 
         $copyTitle = $this->getLanguageService()->sL('redirects.module_redirect:short_url.copy');
