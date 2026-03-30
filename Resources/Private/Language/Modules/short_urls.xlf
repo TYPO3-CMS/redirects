@@ -22,7 +22,7 @@
         <source>With the current set of filters applied, no Short URL could be found.</source>
       </trans-unit>
       <trans-unit id="not_found.title">
-        <source>No Short URLs found!</source>
+        <source>No Short URLs found.</source>
       </trans-unit>
       <trans-unit id="not_found.message">
         <source>There are currently no Short URLs found in the database.</source>
